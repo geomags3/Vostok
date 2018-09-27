@@ -10,9 +10,9 @@ from tensorflow.python.keras.preprocessing import image
 from tensorflow.python.keras import callbacks
 
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
-BASE_DIR = '/home/user/Рабочий стол/Dataset_Train_and_Test/'
+# BASE_DIR = '/home/user/Рабочий стол/Dataset_Train_and_Test/'
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ НОУТБУКА
-# BASE_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Image_for_CNN_4000_image/'
+BASE_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Image_for_CNN_4000_image/'
 
 TRAIN_DIR = BASE_DIR + 'train'
 VALIDATION_DIR = BASE_DIR + 'validation'

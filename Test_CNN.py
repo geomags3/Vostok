@@ -5,7 +5,7 @@ import numpy as np
 import time, os
 
 IMAGE_SIZE = [206, 398, 1]
-THRESHOLD = 0.90
+THRESHOLD = 0.95
 
 MODEL_FILE_NAME = 'Vostok_model_v{}.json'
 WEIGHTS_FILE_NAME = 'Vostok_weights_v{}.h5'
