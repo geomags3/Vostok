@@ -8,6 +8,7 @@ from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.models import model_from_json
 from tensorflow.python.keras.preprocessing import image
 from tensorflow.python.keras import callbacks
+import csv
 
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
 # BASE_DIR = '/home/user/Рабочий стол/Dataset_Train_and_Test/'
@@ -22,9 +23,17 @@ IMAGE_SIZE = [206, 398, 1]
 TARGET_SIZE = [206, 398]
 NB_EPOCH = 30
 BATCH_SIZE = 50
+LR = 1e-4
+MODEL_VERSION = 1
+WEIGHTS_VERSION = 1
+LOSS_FUNCTION = 'binary_crossentropy'
+NB_TRAIN_STEP = 200
+NB_VAL_STEP = 40
+
 
 MODEL_NAME = 'Vostok_model_v{}.json'
 WEIGHTS_NAME = 'Vostok_weights_v{}.h5'
+CONFIG_NAME = 'Vostok_configuration_v{}.csv'
 
 
 def create_model(summary):
@@ -46,13 +55,14 @@ def create_model(summary):
     model.add(Dense(512, activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
 
-    model.compile(loss='binary_crossentropy',
-                  optimizer=optimizers.RMSprop(lr=1e-4),
+    model.compile(loss=LOSS_FUNCTION,
+                  optimizer=optimizers.RMSprop(lr=LR),
                   metrics=['acc'])
 
     if summary == True: print(model.summary())
 
     return model
+
 
 def create_generator():
     train_datagen = ImageDataGenerator(rescale=1. / 255,
@@ -81,6 +91,7 @@ def create_generator():
 
     return train_generator, validation_generator
 
+
 def create_callbacks(early_stopping, model_checkpoint, reduce_lr_on_plateau, tensor_board):
     callbacks_list = []
 
@@ -99,6 +110,7 @@ def create_callbacks(early_stopping, model_checkpoint, reduce_lr_on_plateau, ten
 
     return callbacks_list
 
+
 def fit_model(model, train_generator, validation_generator, callbacks_list, nb_train_step, nb_val_step):
     history = model.fit_generator(train_generator,
                                   steps_per_epoch=nb_train_step,
@@ -108,6 +120,7 @@ def fit_model(model, train_generator, validation_generator, callbacks_list, nb_t
                                   validation_steps=nb_val_step)
     return history
 
+
 def save_model_and_weights(model, save_model, version_model, save_weights, version_weights):
     if save_model == True:
         json_file = open(MODEL_NAME.format(version_model), 'w')
@@ -116,6 +129,7 @@ def save_model_and_weights(model, save_model, version_model, save_weights, versi
 
     if save_weights == True:
         model.save(WEIGHTS_NAME.format(version_weights))
+
 
 def show_results(history):
     acc = history.history['acc']
@@ -135,6 +149,52 @@ def show_results(history):
     plt.show()
 
 
+def network_configuration():
+    with open(CONFIG_NAME.format(MODEL_VERSION), 'w') as csvfile:
+        filewriter = csv.writer(csvfile, delimiter=';')
+        filewriter.writerow(['Network version', str(MODEL_VERSION)])
+        # Network architecture
+        filewriter.writerow(['Network architecture'])
+        filewriter.writerow(['INPUT', '206x398x1'])
+        filewriter.writerow(['CONV', '32x7x7', 'RELU'])
+        filewriter.writerow(['POOL', '2x2'])
+        filewriter.writerow(['CONV', '64x5x5', 'RELU'])
+        filewriter.writerow(['POOL', '2x2'])
+        filewriter.writerow(['CONV', '64x5x5', 'RELU'])
+        filewriter.writerow(['POOL', '2x2'])
+        filewriter.writerow(['CONV', '128x3x3', 'RELU'])
+        filewriter.writerow(['POOL', '2x2'])
+        filewriter.writerow(['CONV', '128x3x3', 'RELU'])
+        filewriter.writerow(['POOL', '2x2'])
+        filewriter.writerow(['DROPOUT'])
+        filewriter.writerow(['DENSE', '512', 'RELU'])
+        filewriter.writerow(['DENSE', '1', 'SIGMOID'])
+        # Fit options
+        filewriter.writerow(['Fit options'])
+        filewriter.writerow(['Loss function = ' + LOSS_FUNCTION])
+        filewriter.writerow(['Optimizer = RMSprop'])
+        filewriter.writerow(['Learning rate = ' + str(LR)])
+        filewriter.writerow(['Number epochs = ' + str(NB_EPOCH)])
+        filewriter.writerow(['Batch size = ' + str(BATCH_SIZE)])
+        filewriter.writerow(['Number train images = ' + str((NB_TRAIN_STEP * BATCH_SIZE) * 2)])
+        filewriter.writerow(['Number validation images = ' + str((NB_VAL_STEP * BATCH_SIZE) * 2)])
+        # Data augmentation
+        filewriter.writerow(['Data augmentation'])
+        filewriter.writerow(['rotation_range=20'])
+        filewriter.writerow(['width_shift_range=0.2'])
+        filewriter.writerow(['height_shift_range=0.2'])
+        filewriter.writerow(['shear_range=0.2'])
+        filewriter.writerow(['zoom_range=0'])
+        filewriter.writerow(['horizontal_flip=True'])
+        # Callbacks
+        filewriter.writerow(['Callbacks'])
+        filewriter.writerow(['EarlyStopping(monitor=\'val_acc\', patience=5)'])
+        filewriter.writerow(['ModelCheckpoint(monitor=\'val_loss\', save_best_only=True)'])
+        filewriter.writerow(['ReduceLROnPlateau(monitor=\'val_loss\', factor=0.1, patience=10)'])
+
+        filewriter.writerow(['End'])
+
+
 model = create_model(summary=True)
 
 train_generator, validation_generator = create_generator()
@@ -144,10 +204,13 @@ callbacks_list = create_callbacks(early_stopping=True, model_checkpoint=True,
 
 history = fit_model(model=model, train_generator=train_generator,
                     validation_generator=validation_generator, callbacks_list=callbacks_list,
-                    nb_train_step=200, nb_val_step=40)
+                    nb_train_step=NB_TRAIN_STEP, nb_val_step=NB_VAL_STEP)
 
-save_model_and_weights(model=model, save_model=True, version_model=1,
-                       save_weights=True, version_weights=1)
+save_model_and_weights(model=model, save_model=True, version_model=MODEL_VERSION,
+                       save_weights=True, version_weights=WEIGHTS_VERSION)
 
 show_results(history=history)
+
+network_configuration()
+
 
