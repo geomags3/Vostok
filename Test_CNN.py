@@ -114,31 +114,3 @@ def check_test_images(model, number_fail_images, number_pass_images, show_fail, 
 model = loading_model_from_file(version_model=1, version_weights=1)
 # check_one_image(model, ONE_IMAGE_PATH_PC)
 check_test_images(model, 9000, 9000, show_fail=False, show_pass=True)
-
-# img_names = os.listdir(TEST_DIR + '/fail')
-# # img_names = TEST_DIR + '/fail/' + img_names
-#
-# print(TEST_DIR + '/fail/' + img_names[0])
-# print(TEST_DIR + '/fail/' + img_names[1])
-# print(TEST_DIR + '/fail/' + img_names[2])
-
-
-
-
-# # ПРОВЕРКА КЛАССИФИКАЦИИ НА ОДНОМ ИЗОБРАЖЕНИИ
-# test_image_path = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/test/pass/pass 103.png'
-# # test_image_path = '/home/user/Рабочий стол/VostokCNN/ImageDataStore/valid/cup 29.png'
-# # test_image_path = '/media/user/TOSHIBA EXT/2018_02_17/kernel/archive/launch_00001500/object_0000002/Grabber0003.png'
-# img = image.load_img(test_image_path, target_size=(206, 398))
-# plt.imshow(img)
-# plt.show()
-#
-# # Преобразуем картинку в массив для распознавания
-# x = image.img_to_array(img)
-# x /= 255
-# x = np.expand_dims(x, axis=0)
-#
-# # Запускаем распознавание
-# prediction = model.predict(x)
-# # prediction = np.argmax(prediction)
-# print("\n...Результат распознавания дополнительного изображения: ", prediction)
