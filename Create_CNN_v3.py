@@ -8,7 +8,7 @@ from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.models import model_from_json
 from tensorflow.python.keras.preprocessing import image
 from tensorflow.python.keras import callbacks
-import csv
+import csv, os
 
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
 # BASE_DIR = '/home/user/Рабочий стол/Dataset_Train_and_Test/'
@@ -34,6 +34,8 @@ NB_VAL_STEP = 40
 MODEL_NAME = 'Vostok_model_v{}.json'
 WEIGHTS_NAME = 'Vostok_weights_v{}.h5'
 CONFIG_NAME = 'Vostok_configuration_v{}.csv'
+
+CONFIG_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Python/configuration/'
 
 
 def create_model(summary):
@@ -150,7 +152,13 @@ def show_results(history):
 
 
 def network_configuration():
-    with open(CONFIG_NAME.format(MODEL_VERSION), 'w') as csvfile:
+    if not os.path.exists(CONFIG_DIR):
+        os.mkdir(CONFIG_DIR)
+    version_dir = os.path.join(CONFIG_DIR, 'v{}'.format(MODEL_VERSION))
+    os.mkdir(version_dir)
+    file_dir = os.path.join(version_dir, CONFIG_NAME.format(MODEL_VERSION))
+
+    with open(file_dir, 'w', newline='\n') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=';')
         filewriter.writerow(['Network version', str(MODEL_VERSION)])
         # Network architecture
