@@ -5,19 +5,19 @@ import numpy as np
 import time, os, csv
 
 IMAGE_SIZE = [206, 398, 1]
-THRESHOLD = 0.90
+THRESHOLD = 0.98
 MODEL_VERSION = 1
-REPORT_VERSION = 1
+REPORT_VERSION = 3
 
 MODEL_FILE_NAME = 'Vostok_model_v{}.json'
 WEIGHTS_FILE_NAME = 'Vostok_weights_v{}.h5'
 # ONE_IMAGE_PATH_PC = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/test/pass/pass 103.png'
 # ONE_IMAGE_PATH_DELL = '.../Image_for_CNN_4000_image/test/pass/pass 103.png'
-TEST_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test/test'
+TEST_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result/Dataset_Train_and_Test/test'
 
-CONFIG_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Python/configuration/v{}'
-FORMAT_REPORT_NAME = 'report_v{}_%.2f_%.2f'
-NAME_IMAGE_LIST = 'list_wrong_image.csv'
+CONFIG_DIR = '/home/user/Рабочий стол/Python/Vostok/configuration/v{}'
+FORMAT_REPORT_NAME = 'report_v{}_%.2f'
+# NAME_IMAGE_LIST = 'list_wrong_image.csv'
 
 
 
@@ -127,11 +127,8 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
           % (str(time_prediction_single_image)) + ' мс')
 
     if generate_report == True:
-        report_name = FORMAT_REPORT_NAME.format(REPORT_VERSION) % (THRESHOLD, full_network_accuracy)
-        report_dir = os.path.join(CONFIG_DIR.format(MODEL_VERSION), report_name)
-        os.mkdir(report_dir)
-        full_report_name = report_dir + '/' + report_name + '.csv'
-        full_name_image_list = report_dir + '/' + NAME_IMAGE_LIST
+        report_name = FORMAT_REPORT_NAME.format(REPORT_VERSION) % (THRESHOLD)
+        full_report_name = CONFIG_DIR.format(MODEL_VERSION) + '/' + report_name + '.csv'
 
         with open(full_report_name, 'w', newline='\n') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=';')
@@ -139,15 +136,20 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
             filewriter.writerow(['PASS', str(number_pass_images), str(n_pass)])
             filewriter.writerow(['Time', '%.3s' % str(time_prediction_single_image)])
 
-        with open(full_name_image_list, 'w', newline='\n') as csvfile:
-            filewriter = csv.writer(csvfile, delimiter=';')
+            filewriter.writerow(['FAIL images'])
             for wrong_image in wrong_fail_prediction_list:
                 filewriter.writerow([wrong_image])
-
             filewriter.writerow(['PASS images'])
-
             for wrong_image in wrong_pass_prediction_list:
                 filewriter.writerow([wrong_image])
+        # with open(full_name_image_list, 'w', newline='\n') as csvfile:
+        #     filewriter = csv.writer(csvfile, delimiter=';')
+        #     filewriter.writerow(['FAIL images'])
+        #     for wrong_image in wrong_fail_prediction_list:
+        #         filewriter.writerow([wrong_image])
+        #     filewriter.writerow(['PASS images'])
+        #     for wrong_image in wrong_pass_prediction_list:
+        #         filewriter.writerow([wrong_image])
 
 
 model = loading_model_from_file(version_model=1, version_weights=1)
