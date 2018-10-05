@@ -5,19 +5,18 @@ import numpy as np
 import time, os, csv
 
 IMAGE_SIZE = [206, 398, 1]
-THRESHOLD = 0.98
+THRESHOLD = 0.90
 MODEL_VERSION = 1
-REPORT_VERSION = 3
+REPORT_VERSION = 1
 
 MODEL_FILE_NAME = 'Vostok_model_v{}.json'
 WEIGHTS_FILE_NAME = 'Vostok_weights_v{}.h5'
 # ONE_IMAGE_PATH_PC = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/test/pass/pass 103.png'
 # ONE_IMAGE_PATH_DELL = '.../Image_for_CNN_4000_image/test/pass/pass 103.png'
-TEST_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result/Dataset_Train_and_Test/test'
+TEST_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result'
 
 CONFIG_DIR = '/home/user/Рабочий стол/Python/Vostok/configuration/v{}'
 FORMAT_REPORT_NAME = 'report_v{}_%.2f'
-# NAME_IMAGE_LIST = 'list_wrong_image.csv'
 
 
 
@@ -73,7 +72,7 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
                 plt.imshow(img)
                 plt.show()
             n_fail += 1
-            wrong_fail_prediction_list.append(TEST_DIR + '/fail/' + img_name)
+            wrong_fail_prediction_list.append([TEST_DIR + '/fail/' + img_name, str(prediction)])
 
     visual_check = int(input('\n...Сколько изображений с изначально неправильной классификацией FAIL?\n'
                              + '>>> '))
@@ -108,7 +107,7 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
                 plt.imshow(img)
                 plt.show()
             n_pass += 1
-            wrong_pass_prediction_list.append(TEST_DIR + '/pass/' + img_name)
+            wrong_pass_prediction_list.append([TEST_DIR + '/pass/' + img_name, str(prediction)])
 
     visual_check = int(input('\n...Сколько изображений с изначально неправильной классификацией PASS?\n'
                              + '>>> '))
@@ -138,10 +137,10 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
 
             filewriter.writerow(['FAIL images'])
             for wrong_image in wrong_fail_prediction_list:
-                filewriter.writerow([wrong_image])
+                filewriter.writerow([wrong_image[0], wrong_image[1]])
             filewriter.writerow(['PASS images'])
             for wrong_image in wrong_pass_prediction_list:
-                filewriter.writerow([wrong_image])
+                filewriter.writerow([wrong_image[0], wrong_image[1]])
         # with open(full_name_image_list, 'w', newline='\n') as csvfile:
         #     filewriter = csv.writer(csvfile, delimiter=';')
         #     filewriter.writerow(['FAIL images'])
@@ -154,7 +153,8 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
 
 model = loading_model_from_file(version_model=1, version_weights=1)
 # check_one_image(model, ONE_IMAGE_PATH_PC)
-check_test_images_and_generate_report(model, 9000, 9000, show_fail=False, show_pass=False, generate_report=True)
+check_test_images_and_generate_report(model=model, number_fail_images=9000, number_pass_images=9000,
+                                      show_fail=False, show_pass=False, generate_report=True)
 
 
 
