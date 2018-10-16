@@ -5,11 +5,11 @@ import numpy as np
 import time, os, csv
 
 IMAGE_SIZE = [206, 398, 1]
-MODEL_VERSION = 2
+MODEL_VERSION = 4
 WEIGHT_VERSION = 1
 
 THRESHOLD = 0.80
-REPORT_VERSION = 4
+REPORT_VERSION = 3
 
 MODEL_FILE_NAME = 'Vostok_model_v{}'
 WEIGHTS_FILE_NAME = 'Vostok_weights_v{}.h5'

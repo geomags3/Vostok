@@ -1,36 +1,36 @@
-Network version;2
-Network architecture
-INPUT;206x398x1
-CONV;32x7x7;RELU
-POOL;2x2
-CONV;64x5x5;RELU
-POOL;2x2
-CONV;64x5x5;RELU
-POOL;2x2
-CONV;128x3x3;RELU
-POOL;2x2
-CONV;128x3x3;RELU
-POOL;2x2
-DROPOUT
-DENSE;512;RELU
-DENSE;1;SIGMOID
-Fit options
-Loss function = binary_crossentropy
-Optimizer = RMSprop
-Learning rate = 0.0001
-Number epochs = 30
-Batch size = 25
-Number train images = 17000
-Number validation images = 3000
-Data augmentation
-rotation_range=20
-width_shift_range=0.2
-height_shift_range=0.2
-shear_range=0.2
-zoom_range=0
-horizontal_flip=True
-Callbacks
-EarlyStopping(---)
-ModelCheckpoint(monitor='val_loss', save_best_only=True)
-ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10)
-End
+Network version	2	
+Network architecture		
+INPUT	206x398x1	
+CONV	32x7x7	RELU
+POOL	2x2	
+CONV	64x5x5	RELU
+POOL	2x2	
+CONV	64x5x5	RELU
+POOL	2x2	
+CONV	128x3x3	RELU
+POOL	2x2	
+CONV	128x3x3	RELU
+POOL	2x2	
+DROPOUT		
+DENSE	512	RELU
+DENSE	1	SIGMOID
+Fit options		
+Loss function = binary_crossentropy		
+Optimizer = RMSprop		
+Learning rate = 0.0001		
+Number epochs = 30		
+Batch size = 25		
+Number train images = 17000		
+Number validation images = 3000		
+Data augmentation		
+rotation_range=20		
+width_shift_range=0.2		
+height_shift_range=0.2		
+shear_range=0.2		
+zoom_range=0		
+horizontal_flip=True		
+Callbacks		
+EarlyStopping(monitor='val_acc', patience=5)		
+ModelCheckpoint(monitor='val_loss', save_best_only=True)		
+ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10)		
+End		
