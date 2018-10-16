@@ -5,7 +5,6 @@ import numpy as np
 import time, os, csv
 
 IMAGE_SIZE = [206, 398, 1]
-
 MODEL_VERSION = 2
 WEIGHT_VERSION = 1
 
