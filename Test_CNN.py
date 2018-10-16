@@ -5,15 +5,18 @@ import numpy as np
 import time, os, csv
 
 IMAGE_SIZE = [206, 398, 1]
-THRESHOLD = 0.90
-MODEL_VERSION = 1
-REPORT_VERSION = 1
 
-MODEL_FILE_NAME = 'Vostok_model_v{}.json'
+MODEL_VERSION = 2
+WEIGHT_VERSION = 1
+
+THRESHOLD = 0.80
+REPORT_VERSION = 4
+
+MODEL_FILE_NAME = 'Vostok_model_v{}'
 WEIGHTS_FILE_NAME = 'Vostok_weights_v{}.h5'
 # ONE_IMAGE_PATH_PC = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/test/pass/pass 103.png'
 # ONE_IMAGE_PATH_DELL = '.../Image_for_CNN_4000_image/test/pass/pass 103.png'
-TEST_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result'
+TEST_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result/Dataset_Train_and_Test_v2/test'
 
 CONFIG_DIR = '/home/user/Рабочий стол/Python/Vostok/configuration/v{}'
 FORMAT_REPORT_NAME = 'report_v{}_%.2f'
@@ -22,10 +25,11 @@ FORMAT_REPORT_NAME = 'report_v{}_%.2f'
 
 def loading_model_from_file(version_model, version_weights):
     print('\n...Нейронная сеть загружается из файла\n')
-    json_file = open(MODEL_FILE_NAME.format(version_model), 'r')
+    json_file = open(MODEL_FILE_NAME.format(version_model) + '.json', 'r')
     loading_model = model_from_json(json_file.read())
     json_file.close()
-    loading_model.load_weights(WEIGHTS_FILE_NAME.format(version_weights))
+    loading_model.load_weights(MODEL_FILE_NAME.format(version_model)
+                               + '_weights_v{}.h5'.format(version_weights))
     print('\n...Загрузка сети завершена\n')
     return loading_model
 
@@ -151,9 +155,9 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
         #         filewriter.writerow([wrong_image])
 
 
-model = loading_model_from_file(version_model=1, version_weights=1)
+model = loading_model_from_file(version_model=MODEL_VERSION, version_weights=WEIGHT_VERSION)
 # check_one_image(model, ONE_IMAGE_PATH_PC)
-check_test_images_and_generate_report(model=model, number_fail_images=9000, number_pass_images=9000,
+check_test_images_and_generate_report(model=model, number_fail_images=3988, number_pass_images=3988,
                                       show_fail=False, show_pass=False, generate_report=True)
 
 

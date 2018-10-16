@@ -13,7 +13,7 @@ import csv, os
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
 # BASE_DIR = '/home/user/Рабочий стол/Dataset_Train_and_Test/'
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ НОУТБУКА
-BASE_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Image_for_CNN_4000_image/'
+BASE_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result/Dataset_Train_and_Test_v2/'
 
 TRAIN_DIR = BASE_DIR + 'train'
 VALIDATION_DIR = BASE_DIR + 'validation'
@@ -22,20 +22,20 @@ TEST_DIR = BASE_DIR + 'test'
 IMAGE_SIZE = [206, 398, 1]
 TARGET_SIZE = [206, 398]
 NB_EPOCH = 30
-BATCH_SIZE = 50
+BATCH_SIZE = 25  # 50
 LR = 1e-4
-MODEL_VERSION = 1
+MODEL_VERSION = 2
 WEIGHTS_VERSION = 1
 LOSS_FUNCTION = 'binary_crossentropy'
-NB_TRAIN_STEP = 200
-NB_VAL_STEP = 40
+NB_TRAIN_STEP = 340  # 170
+NB_VAL_STEP = 60  # 30
 
 
-MODEL_NAME = 'Vostok_model_v{}.json'
-WEIGHTS_NAME = 'Vostok_weights_v{}.h5'
+MODEL_NAME = 'Vostok_model_v{}'
+# WEIGHTS_NAME = 'weights_v{}'
 CONFIG_NAME = 'Vostok_configuration_v{}.csv'
 
-CONFIG_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Python/configuration/'
+CONFIG_DIR = '/home/user/Рабочий стол/Python/Vostok/configuration/'
 
 
 def create_model(summary):
@@ -125,12 +125,12 @@ def fit_model(model, train_generator, validation_generator, callbacks_list, nb_t
 
 def save_model_and_weights(model, save_model, version_model, save_weights, version_weights):
     if save_model == True:
-        json_file = open(MODEL_NAME.format(version_model), 'w')
+        json_file = open(MODEL_NAME.format(version_model) + '.json', 'w')
         json_file.write(model.to_json())
         json_file.close()
 
     if save_weights == True:
-        model.save(WEIGHTS_NAME.format(version_weights))
+        model.save(MODEL_NAME.format(version_model) + '_weights_v{}.h5'.format(version_weights))
 
 
 def show_results(history):
@@ -196,7 +196,7 @@ def network_configuration():
         filewriter.writerow(['horizontal_flip=True'])
         # Callbacks
         filewriter.writerow(['Callbacks'])
-        filewriter.writerow(['EarlyStopping(monitor=\'val_acc\', patience=5)'])
+        filewriter.writerow(['EarlyStopping(---)'])
         filewriter.writerow(['ModelCheckpoint(monitor=\'val_loss\', save_best_only=True)'])
         filewriter.writerow(['ReduceLROnPlateau(monitor=\'val_loss\', factor=0.1, patience=10)'])
 
