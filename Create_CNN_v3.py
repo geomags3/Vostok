@@ -24,8 +24,8 @@ TARGET_SIZE = [206, 398]
 NB_EPOCH = 30
 BATCH_SIZE = 25  # 50
 LR = 1e-4
-MODEL_VERSION = 4
-WEIGHTS_VERSION = 1
+MODEL_VERSION = 5
+WEIGHTS_VERSION = 3
 LOSS_FUNCTION = 'binary_crossentropy'
 NB_TRAIN_STEP = 340  # 170
 NB_VAL_STEP = 60  # 30
@@ -97,18 +97,18 @@ def create_generator():
 def create_callbacks(early_stopping, model_checkpoint, reduce_lr_on_plateau, tensor_board):
     callbacks_list = []
 
-    # if early_stopping == True:
-    #     callbacks_list.append(callbacks.EarlyStopping(monitor='val_acc', patience=5))
+    if early_stopping == True:
+        callbacks_list.append(callbacks.EarlyStopping(monitor='val_acc', patience=7))
 
     if model_checkpoint == True:
         callbacks_list.append(callbacks.ModelCheckpoint(filepath='weight_checkpoints/weights.{epoch:02d}-{val_loss:.2f}.hdf5',
-                                                        monitor='val_acc', save_best_only=True))
+                                                        monitor='val_loss', save_best_only=True))
 
     if reduce_lr_on_plateau == True:
         callbacks_list.append(callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10))
 
-    if tensor_board == True:
-        callbacks_list.append(callbacks.TensorBoard(log_dir='log_dir', histogram_freq=1))
+    # if tensor_board == True:
+    #     callbacks_list.append(callbacks.TensorBoard(log_dir='log_dir', histogram_freq=1))
 
     return callbacks_list
 
@@ -196,8 +196,8 @@ def network_configuration():
         filewriter.writerow(['horizontal_flip=True'])
         # Callbacks
         filewriter.writerow(['Callbacks'])
-        filewriter.writerow(['EarlyStopping(---)'])
-        filewriter.writerow(['ModelCheckpoint(monitor=\'val_acc\', save_best_only=True)'])
+        filewriter.writerow(['EarlyStopping(monitor=\'val_acc\', patience=7)'])
+        filewriter.writerow(['ModelCheckpoint(monitor=\'val_loss\', save_best_only=True)'])
         filewriter.writerow(['ReduceLROnPlateau(monitor=\'val_loss\', factor=0.1, patience=10)'])
 
         filewriter.writerow(['End'])
@@ -219,6 +219,6 @@ save_model_and_weights(model=model, save_model=True, version_model=MODEL_VERSION
 
 show_results(history=history)
 
-network_configuration()
+# network_configuration()
 
 
