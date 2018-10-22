@@ -1,14 +1,14 @@
 import os, shutil
 import random
 
-FAIL_DIR = '/media/user/TOSHIBA EXT1/Test Wrapper Result/fail'
-PASS_DIR = '/media/user/TOSHIBA EXT1/Test Wrapper Result/pass'
+FAIL_DIR = 'H:/Test Wrapper Result/fail'
+PASS_DIR = 'H:/Test Wrapper Result/pass'
 
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
 # BASE_DIR = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/'
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ НОУТБУКА
 # BASE_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Dataset_Train_and_Test/'
-BASE_DIR = '/media/user/TOSHIBA EXT1/Test Wrapper Result/Dataset_Train_and_Test_v2/'
+BASE_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test_v2/'
 
 def create_directories(create_train_dir, create_val_dir, create_test_dir):
     if not os.path.exists(BASE_DIR):
@@ -107,5 +107,5 @@ def images_distributions(number_fail_image, number_pass_image, fail_set,
         print('...test/pass: ', len(os.listdir(BASE_DIR + 'test/pass')))
 
 create_directories(create_train_dir=True, create_val_dir=True, create_test_dir=True)
-images_distributions(number_fail_image=21198, number_pass_image=13988, fail_set=[8500, 1500, 3988],
-                     pass_set=[8500, 1500, 3988], in_train=True, in_val=True, in_test=True)
+images_distributions(number_fail_image=21116, number_pass_image=13910, fail_set=[8500, 1500, 3910],
+                     pass_set=[8500, 1500, 3910], in_train=True, in_val=True, in_test=True)

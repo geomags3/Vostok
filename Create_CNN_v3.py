@@ -13,7 +13,7 @@ import csv, os
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
 # BASE_DIR = '/home/user/Рабочий стол/Dataset_Train_and_Test/'
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ НОУТБУКА
-BASE_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result/Dataset_Train_and_Test_v2/'
+BASE_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test_v2/'
 
 TRAIN_DIR = BASE_DIR + 'train'
 VALIDATION_DIR = BASE_DIR + 'validation'
@@ -24,8 +24,8 @@ TARGET_SIZE = [206, 398]
 NB_EPOCH = 30
 BATCH_SIZE = 25  # 50
 LR = 1e-4
-MODEL_VERSION = 5
-WEIGHTS_VERSION = 3
+MODEL_VERSION = 6
+WEIGHTS_VERSION = 1
 LOSS_FUNCTION = 'binary_crossentropy'
 NB_TRAIN_STEP = 340  # 170
 NB_VAL_STEP = 60  # 30
@@ -35,7 +35,7 @@ MODEL_NAME = 'Vostok_model_v{}'
 # WEIGHTS_NAME = 'weights_v{}'
 CONFIG_NAME = 'Vostok_configuration_v{}.csv'
 
-CONFIG_DIR = '/home/user/Рабочий стол/Python/Vostok/configuration/'
+CONFIG_DIR = 'C:/Users/Geomags/Documents/GitHub/Vostok/configuration/'
 
 
 def create_model(summary):
@@ -97,8 +97,8 @@ def create_generator():
 def create_callbacks(early_stopping, model_checkpoint, reduce_lr_on_plateau, tensor_board):
     callbacks_list = []
 
-    if early_stopping == True:
-        callbacks_list.append(callbacks.EarlyStopping(monitor='val_acc', patience=7))
+    # if early_stopping == True:
+    #     callbacks_list.append(callbacks.EarlyStopping(monitor='val_acc', patience=7))
 
     if model_checkpoint == True:
         callbacks_list.append(callbacks.ModelCheckpoint(filepath='weight_checkpoints/weights.{epoch:02d}-{val_loss:.2f}.hdf5',
@@ -196,7 +196,7 @@ def network_configuration():
         filewriter.writerow(['horizontal_flip=True'])
         # Callbacks
         filewriter.writerow(['Callbacks'])
-        filewriter.writerow(['EarlyStopping(monitor=\'val_acc\', patience=7)'])
+        filewriter.writerow(['EarlyStopping(---)'])
         filewriter.writerow(['ModelCheckpoint(monitor=\'val_loss\', save_best_only=True)'])
         filewriter.writerow(['ReduceLROnPlateau(monitor=\'val_loss\', factor=0.1, patience=10)'])
 
@@ -219,6 +219,6 @@ save_model_and_weights(model=model, save_model=True, version_model=MODEL_VERSION
 
 show_results(history=history)
 
-# network_configuration()
+network_configuration()
 
 

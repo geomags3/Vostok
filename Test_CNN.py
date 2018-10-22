@@ -5,19 +5,19 @@ import numpy as np
 import time, os, csv
 
 IMAGE_SIZE = [206, 398, 1]
-MODEL_VERSION = 5
-WEIGHT_VERSION = 3
+MODEL_VERSION = 6
+WEIGHT_VERSION = 1
 
 THRESHOLD = 0.99
-REPORT_VERSION = 9
+REPORT_VERSION = 3
 
 MODEL_FILE_NAME = 'Vostok_model_v{}'
 WEIGHTS_FILE_NAME = 'Vostok_weights_v{}.h5'
 # ONE_IMAGE_PATH_PC = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/test/pass/pass 103.png'
 # ONE_IMAGE_PATH_DELL = '.../Image_for_CNN_4000_image/test/pass/pass 103.png'
-TEST_DIR = '/media/user/TOSHIBA EXT/Test Wrapper Result/Dataset_Train_and_Test_v2/test'
+TEST_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test_v2/test'
 
-CONFIG_DIR = '/home/user/Рабочий стол/Python/Vostok/configuration/v{}'
+CONFIG_DIR = 'C:/Users/Geomags/Documents/GitHub/Vostok/configuration/v{}'
 FORMAT_REPORT_NAME = 'report_v{}_%.2f'
 
 
@@ -156,7 +156,7 @@ def check_test_images_and_generate_report(model, number_fail_images, number_pass
 
 model = loading_model_from_file(version_model=MODEL_VERSION, version_weights=WEIGHT_VERSION)
 # check_one_image(model, ONE_IMAGE_PATH_PC)
-check_test_images_and_generate_report(model=model, number_fail_images=3988, number_pass_images=3988,
+check_test_images_and_generate_report(model=model, number_fail_images=3910, number_pass_images=3910,
                                       show_fail=False, show_pass=False, generate_report=True)
 
 
