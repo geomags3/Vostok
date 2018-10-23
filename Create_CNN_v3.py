@@ -24,8 +24,8 @@ TARGET_SIZE = [206, 398]
 NB_EPOCH = 30
 BATCH_SIZE = 25  # 50
 LR = 1e-4
-MODEL_VERSION = 6
-WEIGHTS_VERSION = 1
+MODEL_VERSION = 7
+WEIGHTS_VERSION = 3
 LOSS_FUNCTION = 'binary_crossentropy'
 NB_TRAIN_STEP = 340  # 170
 NB_VAL_STEP = 60  # 30
@@ -35,7 +35,8 @@ MODEL_NAME = 'Vostok_model_v{}'
 # WEIGHTS_NAME = 'weights_v{}'
 CONFIG_NAME = 'Vostok_configuration_v{}.csv'
 
-CONFIG_DIR = 'C:/Users/Geomags/Documents/GitHub/Vostok/configuration/'
+# CONFIG_DIR = 'C:/Users/Geomags/Documents/GitHub/Vostok/configuration/'
+CONFIG_DIR = 'C:/Users/geoma/Documents/GitHub/Vostok/configuration/'
 
 
 def create_model(summary):
@@ -67,13 +68,13 @@ def create_model(summary):
 
 
 def create_generator():
-    train_datagen = ImageDataGenerator(rescale=1. / 255,
-                                       rotation_range=20, #40
-                                       width_shift_range=0.2,
-                                       height_shift_range=0.2,
-                                       shear_range=0.2,
-                                       # zoom_range=0.2,
-                                       horizontal_flip=True)
+    train_datagen = ImageDataGenerator(rescale=1. / 255)
+                                       # rotation_range=20,
+                                       # width_shift_range=0.2,
+                                       # height_shift_range=0.2,
+                                       # shear_range=0.2,
+                                       # # zoom_range=0.2,
+                                       # horizontal_flip=True)
 
     validation_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -188,12 +189,12 @@ def network_configuration():
         filewriter.writerow(['Number validation images = ' + str((NB_VAL_STEP * BATCH_SIZE) * 2)])
         # Data augmentation
         filewriter.writerow(['Data augmentation'])
-        filewriter.writerow(['rotation_range=20'])
-        filewriter.writerow(['width_shift_range=0.2'])
-        filewriter.writerow(['height_shift_range=0.2'])
-        filewriter.writerow(['shear_range=0.2'])
-        filewriter.writerow(['zoom_range=0'])
-        filewriter.writerow(['horizontal_flip=True'])
+        filewriter.writerow(['rotation_range='])
+        filewriter.writerow(['width_shift_range='])
+        filewriter.writerow(['height_shift_range='])
+        filewriter.writerow(['shear_range='])
+        filewriter.writerow(['zoom_range='])
+        filewriter.writerow(['horizontal_flip='])
         # Callbacks
         filewriter.writerow(['Callbacks'])
         filewriter.writerow(['EarlyStopping(---)'])
@@ -219,6 +220,6 @@ save_model_and_weights(model=model, save_model=True, version_model=MODEL_VERSION
 
 show_results(history=history)
 
-network_configuration()
+# network_configuration()
 
 
