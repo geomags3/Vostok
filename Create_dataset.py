@@ -1,14 +1,14 @@
 import os, shutil
 import random
 
-FAIL_DIR = 'H:/Test Wrapper Result/fail'
-PASS_DIR = 'H:/Test Wrapper Result/pass'
+FAIL_DIR = 'H:/Test Wrapper Result/Images/all gap/fail'
+PASS_DIR = 'H:/Test Wrapper Result/Images/all gap/pass'
 
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
 # BASE_DIR = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/'
 # БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ НОУТБУКА
 # BASE_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Dataset_Train_and_Test/'
-BASE_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test_v2/'
+BASE_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test_v3_all_gap/'
 
 def create_directories(create_train_dir, create_val_dir, create_test_dir):
     if not os.path.exists(BASE_DIR):

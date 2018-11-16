@@ -5,6 +5,7 @@ from tensorflow.python.keras.layers import Dense, Flatten, Dropout
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras import optimizers
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.python.keras.utils import to_categorical
 from tensorflow.python.keras.models import model_from_json
 from tensorflow.python.keras.preprocessing import image
 from tensorflow.python.keras import callbacks
@@ -19,17 +20,16 @@ TRAIN_DIR = BASE_DIR + 'train'
 VALIDATION_DIR = BASE_DIR + 'validation'
 TEST_DIR = BASE_DIR + 'test'
 
-IMAGE_SIZE = [206, 398, 1]
-TARGET_SIZE = [206, 398]
+IMAGE_SIZE = [206, 398, 1]  # 206, 398, 1
+TARGET_SIZE = [206, 398]  # 206, 398
 NB_EPOCH = 30
-BATCH_SIZE = 25  # 50
+BATCH_SIZE = 25  # 10
 LR = 1e-4
-MODEL_VERSION = 7
-WEIGHTS_VERSION = 3
+MODEL_VERSION = 12
+WEIGHTS_VERSION = 1
 LOSS_FUNCTION = 'binary_crossentropy'
-NB_TRAIN_STEP = 340  # 170
-NB_VAL_STEP = 60  # 30
-
+NB_TRAIN_STEP = 340  # 850
+NB_VAL_STEP = 60  # 150
 
 MODEL_NAME = 'Vostok_model_v{}'
 # WEIGHTS_NAME = 'weights_v{}'
@@ -82,6 +82,8 @@ def create_generator():
                                                         target_size=TARGET_SIZE,
                                                         color_mode='grayscale',
                                                         batch_size=BATCH_SIZE,
+                                                        # classes=None, # автоматически подгружаются классы из
+                                                        # названий подпапок
                                                         shuffle=True,
                                                         class_mode='binary')
 
@@ -89,8 +91,12 @@ def create_generator():
                                                                   target_size=TARGET_SIZE,
                                                                   color_mode='grayscale',
                                                                   batch_size=BATCH_SIZE,
+                                                                  # classes=None,  # автоматически подгружаются классы из
+                                                                  # названий подпапок
                                                                   shuffle=True,
                                                                   class_mode='binary')
+    print(train_generator.class_indices)
+    print(validation_generator.class_indices)
 
     return train_generator, validation_generator
 
@@ -220,6 +226,6 @@ save_model_and_weights(model=model, save_model=True, version_model=MODEL_VERSION
 
 show_results(history=history)
 
-# network_configuration()
+network_configuration()
 
 
