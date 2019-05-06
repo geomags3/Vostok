@@ -1,16 +1,21 @@
 import os, shutil
 import random
 
-FAIL_DIR = 'H:/Test Wrapper Result/Images/all gap/fail'
-PASS_DIR = 'H:/Test Wrapper Result/Images/all gap/pass'
+FAIL_DIR = 'E:/Only gap/fail'
+PASS_DIR = 'E:/Only gap/pass'
 
-# БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
-# BASE_DIR = '/home/user/Рабочий стол/VostokCNN/Image_for_CNN_4000_image/'
-# БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ НОУТБУКА
-# BASE_DIR = 'C:/Users/Geomags/Desktop/VostokCNN/Dataset_Train_and_Test/'
-BASE_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test_v3_all_gap/'
+# БАЗОВАЯ ДИРЕКТОРИЯ
+BASE_DIR = 'E:/Only gap/Dataset/'
 
 def create_directories(create_train_dir, create_val_dir, create_test_dir):
+    '''
+    Создать папки 'train', 'validation' и 'test',
+    а в них подпапки 'fail', 'pass'
+    :param create_train_dir: создавать папку 'train'?
+    :param create_val_dir: создавать папку 'validation'?
+    :param create_test_dir: создавать папку 'test'?
+    :return:
+    '''
     if not os.path.exists(BASE_DIR):
         os.mkdir(BASE_DIR)
 
@@ -43,8 +48,26 @@ def create_directories(create_train_dir, create_val_dir, create_test_dir):
 
 def images_distributions(number_fail_image, number_pass_image, fail_set,
                          pass_set, in_train, in_val, in_test):
+    '''
+    Из общего количества FAIL изображений случайным образом формирует выборки:
+    'BASE_DIR/train/fail'
+    'BASE_DIR/validation/fail'
+    'BASE_DIR/test/fail'
+    Из общего количества PASS изображений случайным образом формирует выборки:
+    'BASE_DIR/train/pass'
+    'BASE_DIR/validation/pass'
+    'BASE_DIR/test/pass'
+
+    :param number_fail_image: общее количество FAIL изображений
+    :param number_pass_image: общее количество PASS изображений
+    :param fail_set: массив количества FAIL изображений создаваемых выборок [train, validation, test]
+    :param pass_set: массив количества PASS изображений создаваемых выборок [train, validation, test]
+    :param in_train: создавать выборки train?
+    :param in_val: создавать выборки validation?
+    :param in_test: создавать выборки test?
+    :return:
+    '''
     # FAIL
-    # random_image_list = list(range(1, fail_set[0] + fail_set[1] + fail_set[2] + 1))
     random_image_list = list(range(1, number_fail_image + 1))
     random.shuffle(random_image_list)
 
@@ -75,7 +98,6 @@ def images_distributions(number_fail_image, number_pass_image, fail_set,
         print('...test/fail: ', len(os.listdir(BASE_DIR + 'test/fail')))
 
     # PASS
-    # random_image_list = list(range(1, pass_set[0] + pass_set[1] + pass_set[2] + 1))
     random_image_list = list(range(1, number_pass_image + 1))
     random.shuffle(random_image_list)
 
@@ -107,5 +129,5 @@ def images_distributions(number_fail_image, number_pass_image, fail_set,
         print('...test/pass: ', len(os.listdir(BASE_DIR + 'test/pass')))
 
 create_directories(create_train_dir=True, create_val_dir=True, create_test_dir=True)
-images_distributions(number_fail_image=21116, number_pass_image=13910, fail_set=[8500, 1500, 3910],
-                     pass_set=[8500, 1500, 3910], in_train=True, in_val=True, in_test=True)
+images_distributions(number_fail_image=4193, number_pass_image=4239, fail_set=[2920, 620, 640],
+                     pass_set=[2920, 620, 640], in_train=True, in_val=True, in_test=True)

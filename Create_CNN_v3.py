@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import tensorflow as tf
 from tensorflow.python.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.python.keras.layers import Dense, Flatten, Dropout
 from tensorflow.python.keras.models import Sequential
@@ -11,48 +12,57 @@ from tensorflow.python.keras.preprocessing import image
 from tensorflow.python.keras import callbacks
 import csv, os
 
-# БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ КОМПЬЮТЕРА
-# BASE_DIR = '/home/user/Рабочий стол/Dataset_Train_and_Test/'
-# БАЗОВАЯ ДИРЕКТОРИЯ ДЛЯ НОУТБУКА
-BASE_DIR = 'H:/Test Wrapper Result/Dataset_Train_and_Test_v2/'
+# БАЗОВАЯ ДИРЕКТОРИЯ ХРАНИЛИЩА ДАННЫХ
+BASE_DIR = 'E:/Only gap/Dataset/'
 
 TRAIN_DIR = BASE_DIR + 'train'
 VALIDATION_DIR = BASE_DIR + 'validation'
 TEST_DIR = BASE_DIR + 'test'
 
-IMAGE_SIZE = [206, 398, 1]  # 206, 398, 1
-TARGET_SIZE = [206, 398]  # 206, 398
-NB_EPOCH = 30
-BATCH_SIZE = 25  # 10
+IMAGE_SIZE = [38, 390, 1]  # 206, 398, 1
+TARGET_SIZE = [38, 390]  # 206, 398
+NB_EPOCH = 40
+BATCH_SIZE = 20  # 25
 LR = 1e-4
-MODEL_VERSION = 12
+MODEL_VERSION = 16
 WEIGHTS_VERSION = 1
 LOSS_FUNCTION = 'binary_crossentropy'
-NB_TRAIN_STEP = 340  # 850
-NB_VAL_STEP = 60  # 150
+NB_TRAIN_STEP = 146  # 850
+NB_VAL_STEP = 31  # 150
 
 MODEL_NAME = 'Vostok_model_v{}'
-# WEIGHTS_NAME = 'weights_v{}'
 CONFIG_NAME = 'Vostok_configuration_v{}.csv'
 
-# CONFIG_DIR = 'C:/Users/Geomags/Documents/GitHub/Vostok/configuration/'
 CONFIG_DIR = 'C:/Users/geoma/Documents/GitHub/Vostok/configuration/'
 
 
 def create_model(summary):
+    '''
+    Формирование архитектуры сверточной нейронной сети.
+    Создание сети.
+
+    :param summary:
+    True - выводить описание сети
+    Felse - не выводить
+
+    :return:
+    model - объект сети
+
+    Архитектура сети оптимизирована для изображений размера [38, 390, 1]
+    '''
     model = Sequential()
-    model.add(Conv2D(32, (7, 7),
+    model.add(Conv2D(32, (3, 3),  # (7, 7) вместо (3, 3)
                      # количество каналов изображения (ПРОВЕРИТЬ!)
                      input_shape=IMAGE_SIZE, activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(64, (5, 5), activation='relu'))
+    model.add(Conv2D(64, (3, 3), activation='relu'))  # (5, 5) вместо (3, 3)
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(64, (5, 5), activation='relu'))
+    model.add(Conv2D(64, (3, 3), activation='relu'))  # (5, 5) вместо (3, 3)
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(128, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(128, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    # model.add(Conv2D(128, (3, 3), activation='relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
+    # model.add(Conv2D(128, (3, 3), activation='relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
     model.add(Dropout(0.5))
     model.add(Dense(512, activation='relu'))
@@ -68,6 +78,14 @@ def create_model(summary):
 
 
 def create_generator():
+    '''
+    Создание генераторов изображений:
+    train_generator
+    validation_generator
+    Data Augmentation (расширение данных) - выключено
+    :return:
+    train_generator, validation_generator
+    '''
     train_datagen = ImageDataGenerator(rescale=1. / 255)
                                        # rotation_range=20,
                                        # width_shift_range=0.2,
@@ -102,6 +120,15 @@ def create_generator():
 
 
 def create_callbacks(early_stopping, model_checkpoint, reduce_lr_on_plateau, tensor_board):
+    '''
+    Создание списка callbacks
+
+    :param early_stopping: остановка обучения, если параметр 'monitor' не меняется в течении 'patience' эпох
+    :param model_checkpoint:  сохранение весов сети с лучшим показателем параметра 'monitor'
+    :param reduce_lr_on_plateau: уменьшение learning rate в процессе обучения
+    :param tensor_board:
+    :return:
+    '''
     callbacks_list = []
 
     # if early_stopping == True:
@@ -121,6 +148,16 @@ def create_callbacks(early_stopping, model_checkpoint, reduce_lr_on_plateau, ten
 
 
 def fit_model(model, train_generator, validation_generator, callbacks_list, nb_train_step, nb_val_step):
+    '''
+    Обучение сети
+    :param model: модель сети
+    :param train_generator:
+    :param validation_generator:
+    :param callbacks_list: список callbacks
+    :param nb_train_step: количество шагов обучения - train
+    :param nb_val_step: количество шагов проверки - validation
+    :return: история обучения
+    '''
     history = model.fit_generator(train_generator,
                                   steps_per_epoch=nb_train_step,
                                   epochs=NB_EPOCH,
@@ -131,6 +168,15 @@ def fit_model(model, train_generator, validation_generator, callbacks_list, nb_t
 
 
 def save_model_and_weights(model, save_model, version_model, save_weights, version_weights):
+    '''
+    Сохранение модели сети и ее весовых коэффициентов
+    :param model: модель сети
+    :param save_model: сохранять ли модель?
+    :param version_model: версия модели
+    :param save_weights: сохранять ли веса?
+    :param version_weights: версия весов
+    :return:
+    '''
     if save_model == True:
         json_file = open(MODEL_NAME.format(version_model) + '.json', 'w')
         json_file.write(model.to_json())
@@ -141,6 +187,11 @@ def save_model_and_weights(model, save_model, version_model, save_weights, versi
 
 
 def show_results(history):
+    '''
+    Отображение графиков обучения
+    :param history: история (создается в 'fit_model')
+    :return:
+    '''
     acc = history.history['acc']
     val_acc = history.history['val_acc']
     loss = history.history['loss']
@@ -159,6 +210,10 @@ def show_results(history):
 
 
 def network_configuration():
+    '''
+    Сохранение основных параметров сети в .csv документ
+    :return:
+    '''
     if not os.path.exists(CONFIG_DIR):
         os.mkdir(CONFIG_DIR)
     version_dir = os.path.join(CONFIG_DIR, 'v{}'.format(MODEL_VERSION))
@@ -210,6 +265,35 @@ def network_configuration():
         filewriter.writerow(['End'])
 
 
+def freeze_session(session, keep_var_names=None, output_names=None, clear_devices=True):
+    """
+    Freezes the state of a session into a pruned computation graph.
+
+    Creates a new computation graph where variable nodes are replaced by
+    constants taking their current value in the session. The new graph will be
+    pruned so subgraphs that are not necessary to compute the requested
+    outputs are removed.
+    @param session The TensorFlow session to be frozen.
+    @param keep_var_names A list of variable names that should not be frozen,
+                          or None to freeze all the variables in the graph.
+    @param output_names Names of the relevant graph outputs.
+    @param clear_devices Remove the device directives from the graph for better portability.
+    @return The frozen graph definition.
+    """
+    graph = session.graph
+    with graph.as_default():
+        freeze_var_names = list(set(v.op.name for v in tf.global_variables()).difference(keep_var_names or []))
+        output_names = output_names or []
+        output_names += [v.op.name for v in tf.global_variables()]
+        input_graph_def = graph.as_graph_def()
+        if clear_devices:
+            for node in input_graph_def.node:
+                node.device = ''
+        frozen_graph = tf.graph_util.convert_variables_to_constants(
+            session, input_graph_def, output_names, freeze_var_names)
+        return frozen_graph
+
+
 model = create_model(summary=True)
 
 train_generator, validation_generator = create_generator()
@@ -227,5 +311,6 @@ save_model_and_weights(model=model, save_model=True, version_model=MODEL_VERSION
 show_results(history=history)
 
 network_configuration()
+
 
 
